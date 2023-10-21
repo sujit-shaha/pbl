@@ -58,7 +58,7 @@ public:
 
     void displayNotification() const {
         cout << "Notifications: ";
-        
+
         if (notification.empty()) {
             cout << "No notifications." << endl;
         } else {
@@ -82,7 +82,7 @@ int main() {
     BloodBank bloodBank;
     ifstream fin;
     ofstream fout;
-
+    fout.open("bloodBankDonar.txt");
 
     while (true) {
         cout<<endl;
@@ -107,9 +107,9 @@ int main() {
                 cin >> bloodType;
                 Donor donor(name, bloodType);
                 bloodBank.addDonor(donor);
-                fout.open("bloodBankDonar.txt");
-                fout<<name<<bloodType<<endl;
-                fout.close();
+                
+                fout<<name<<" "<<bloodType<<endl;
+                
                 cout << "Donor added successfully." << endl;
                 break;
             }
@@ -134,6 +134,7 @@ int main() {
             }
             case 5:
                 cout << "Exiting the program. Goodbye!" << endl;
+                fout.close();
                 return 0;
             default:
                 cout << "Invalid choice. Please try again." << endl;
