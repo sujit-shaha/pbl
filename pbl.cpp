@@ -43,7 +43,9 @@ public:
     }
 
     string line;
-    while (getline(fin, line)) {
+    fin.seekg(0,ios::beg);
+    while (fin) {
+        getline(fin, line);
         // std::istringstream iss(line);
         string name, blood;
         if (fin >> name >> blood) {
@@ -83,6 +85,7 @@ int main() {
     ifstream fin;
     ofstream fout;
     fout.open("bloodBankDonar.txt");
+    fout<<"Name BloodType"<<endl;
 
     while (true) {
         cout<<endl;
