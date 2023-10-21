@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include<fstream>
 using namespace std;
 
 class Donor {
@@ -29,15 +30,35 @@ public:
 
     void searchDonors(const string& bloodType) {
         cout << "Donors with Blood Type " << bloodType << ":" << endl;
-        for (const Donor& donor : donors) {
-            if (donor.getBloodType() == bloodType) {
-                donor.display();
+        // for (const Donor& donor : donors) {
+        //     if (donor.getBloodType() == bloodType) {
+        //         donor.display();
+        //     }
+        // }
+        ifstream fin;
+        fin.open("bloodBankDonar.txt");
+    if (!fin.is_open()) {
+        cerr << "Error opening file!" <<endl;
+        return;
+    }
+
+    string line;
+    while (getline(fin, line)) {
+        // std::istringstream iss(line);
+        string name, blood;
+        if (fin >> name >> blood) {
+            if (blood == bloodType) {
+                std::cout << "Name: " << name << ", Blood Type: " << blood << std::endl;
             }
         }
     }
+    fin.close();
+}
+    
 
     void displayNotification() const {
         cout << "Notifications: ";
+        
         if (notification.empty()) {
             cout << "No notifications." << endl;
         } else {
@@ -59,6 +80,9 @@ private:
 
 int main() {
     BloodBank bloodBank;
+    ifstream fin;
+    ofstream fout;
+
 
     while (true) {
         cout<<endl;
@@ -83,6 +107,9 @@ int main() {
                 cin >> bloodType;
                 Donor donor(name, bloodType);
                 bloodBank.addDonor(donor);
+                fout.open("bloodBankDonar.txt");
+                fout<<name<<bloodType<<endl;
+                fout.close();
                 cout << "Donor added successfully." << endl;
                 break;
             }
