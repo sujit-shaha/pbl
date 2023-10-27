@@ -94,9 +94,10 @@ public:
     fin.seekg(0,fin.beg);
     while (getline(fin, line)) {
         string name, blood;
-        if (fin >> name >> blood) {
+        float qty;
+        if (fin >> name >> blood >> qty) {
             if (blood == bloodType) {
-                cout << "Name: " << name << ", Blood Type: " << blood << endl;
+                cout << "Name: " << name << ", Blood Type: " << blood << " Quantity : "<<qty<<endl;
                 found =1;
             }
         }
@@ -104,6 +105,29 @@ public:
     if(found==0)
     cout<<"Data not found";
     fin.close();
+}
+
+void removeDonor(string& bloodType){
+	cout<<"Giving blood with blood group : "<<bloodType<<" : "<<endl;
+	ifstream infile("bloodBankDonar.txt",ios::app);
+	ofstream outfile("temp.txt");
+	infile.seekg(0,infile.beg);
+	if(!infile){
+		cerr << "Error opening file!" <<endl;
+        return;
+	}
+	
+	string line;
+	while(getline(infile,line)){
+		if(line.find(bloodType)==string::npos){
+			outfile<<line<<endl;
+		}
+	}
+	infile.close();
+	outfile.close();
+	
+	remove("bloodBankDonar.txt");
+	rename("temp.txt","bloodBankDonar.txt");
 }
 
 
@@ -143,7 +167,8 @@ int main() {
         cout << "3. Display Notifications" << endl;
         cout << "4. Create Blood Request" << endl;
         cout << "5. Display list of donors"<<endl;
-        cout << "6. Exit" << endl;
+        cout << "6. Remove Donor" << endl;
+        cout << "7. Exit"<<endl;
         cout << "Enter your choice: ";
         int choice;
         cin >> choice;
@@ -197,7 +222,14 @@ int main() {
              case 5:
                 bloodBank.display();
                 break;
-            case 6:
+            case 6:{
+            	string bloodType;
+                cout << "Enter blood type to search: ";
+                cin >> bloodType;
+            	bloodBank.removeDonor(bloodType);
+            	break;
+            }
+            case 7:
                 cout << "Exiting the program. Goodbye!" << endl;
                 return 0;
                 break;
