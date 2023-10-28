@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include<bits/stdc++.h>
 #include<fstream>
 using namespace std;
 class Donor {
@@ -38,51 +39,11 @@ public:
     }
     void display()
     {
-        cout<<"Total "<<get_count()<<" peoples denoted their blood."<<endl;
-        for (int i = 0; i < donors.size(); i++){
-            donors[i].display();
-    }
-    }
-    int search(const string &name)
-    {
-        bool found=false;
-        for (int i = 0; i < donors.size(); i++){
-            if (donors[i].getName() == name)
-            {
-                found=true;
-                return i;
-            }
-    }
-    if(!found)
-    {
-        cout << "No such person exists in the database!" << endl;
-        return -1;
-    }
-    }
-    int frequency(const string &name)
-    {
-        int freq=0;
-        for (int i = 0; i < donors.size(); i++){
-            if (donors[i].getName() == name)
-            {
-                freq++;
-            }
-    }
-    return freq;
-    }
-    void replace(const Donor& donor,int index,float qty)
-    {
-        donors[index].quantity+=qty;
-        cout<<"Blood quantity updated to : "<<donors[index].quantity<<endl;
-        donors.pop_back();
-        count--;
-    }
-    void searchDonors(const string& bloodType) {
-        cout << "Donors with Blood Type " << bloodType << ":" << endl;
-//        for (const Donor& donor : donors) {
-//            if (donor.getBloodType() == bloodType) {
-//                donor.display();}}
-	int found = 0;
+        map<string,list<string>> m;
+        // cout<<"Total "<<get_count()<<" peoples denoted their blood."<<endl;
+        // for (int i = 0; i < donors.size(); i++){
+        //     donors[i].display();
+
         ifstream fin;
         fin.open("bloodBankDonar.txt",ios::app);
     if (!fin.is_open()) {
@@ -96,19 +57,120 @@ public:
         string name, blood;
         float qty;
         if (fin >> name >> blood >> qty) {
-            if (blood == bloodType) {
-                cout << "Name: " << name << ", Blood Type: " << blood << " Quantity : "<<qty<<endl;
-                found =1;
+           m[blood].push_back(name+" "+to_string(qty));
+        }
+    }
+    map<string,list<string>>::iterator i = m.begin();
+    for(i;i!=m.end();i++){
+        cout<<endl<<i->first<<" :\n";
+        list<string>::iterator j = i->second.begin();
+        while(!i->second.empty())
+        {
+            auto j = i->second;
+            cout<<"\t"<<j.front();
+            i->second.pop_front();
+        }
+        
+    }
+    
+    fin.close();
+    
+    }
+    float search(const string name1)
+    {
+//       cout << "Donors with Blood Type " << bloodType << ":" << endl;
+//        for (const Donor& donor : donors) {
+//            if (donor.getBloodType() == bloodType) {
+//                donor.display();}}
+	int found = 0;
+        ifstream fin;
+        fin.open("bloodBankDonar.txt",ios::app);
+    if (!fin.is_open()) {
+        cerr << "Error opening file!" <<endl;
+        return -1;
+    }
+
+    string line;
+    fin.seekg(0,fin.beg);
+    while (getline(fin, line)) {
+        string name, blood;
+        float qty;
+        if (fin >> name >> blood >> qty) {
+            if (name == name1) {
+//                cout << "Name: " << name << ", Blood Type: " << blood << " Quantity : "<<qty<<endl;
+                fin.close();
+                return qty;
+                
             }
         }
     }
-    if(found==0)
+    
     cout<<"Data not found";
+    return 0;
+    fin.close();
+    }
+  
+    int frequency(const string &name)
+    {
+        int freq=0;
+        for (int i = 0; i < donors.size(); i++){
+            if (donors[i].getName() == name)
+            {
+                freq++;
+            }
+    }
+    return freq;
+    }
+    void replace(const Donor& donor,int index,float qty)
+    {
+        ofstream fout;
+    	
+//        donors[index].quantity+=qty;
+//        cout<<"Blood quantity updated to : "<<quantity<<endl;
+//        donors.pop_back();
+		float quantity = search(donor.getName());
+		quantity+=qty;
+		removeDonor(donor.getName());
+		fout.open("bloodBankDonar.txt",ios::app);
+                fout<<donor.getName() << " "<<donor.getBloodType()<<" "<< quantity <<" "<<endl;
+                fout.close();
+        count--;
+    }
+    int searchDonors(const string& bloodType) {
+        cout << "Donors with Blood Type " << bloodType << ":" << endl;
+//        for (const Donor& donor : donors) {
+//            if (donor.getBloodType() == bloodType) {
+//                donor.display();}}
+	int found = 0;
+        ifstream fin;
+        fin.open("bloodBankDonar.txt",ios::app);
+    if (!fin.is_open()) {
+        cerr << "Error opening file!" <<endl;
+        return -1;
+    }
+
+    string line;
+    fin.seekg(0,fin.beg);
+    while (getline(fin, line)) {
+        string name, blood;
+        float qty;
+        if (fin >> name >> blood >> qty) {
+            if (blood == bloodType) {
+                cout << "Name: " << name << ", Blood Type: " << blood << " Quantity : "<<qty<<endl;
+                fin.close();
+                return 1;
+                
+            }
+        }
+    }
+    
+    cout<<"Data not found";
+    return 0;
     fin.close();
 }
 
-void removeDonor(string& bloodType){
-	cout<<"Giving blood with blood group : "<<bloodType<<" : "<<endl;
+void removeDonor(string data){
+//	cout<<"Giving blood of donor : "<<data<<" : "<<endl;
 	ifstream infile("bloodBankDonar.txt",ios::app);
 	ofstream outfile("temp.txt");
 	infile.seekg(0,infile.beg);
@@ -119,7 +181,7 @@ void removeDonor(string& bloodType){
 	
 	string line;
 	while(getline(infile,line)){
-		if(line.find(bloodType)==string::npos){
+		if(line.find(data)==string::npos){
 			outfile<<line<<endl;
 		}
 	}
@@ -156,6 +218,9 @@ int main() {
     BloodBank bloodBank;
     ifstream fin;
     ofstream fout;
+    fout.open("bloodBankDonar.txt",ios::app);
+    fout<<endl;
+    fout.close();
 
 
     while (true) {
@@ -186,19 +251,20 @@ int main() {
                 cin>>qty;
                 Donor donor(name, bloodType,qty);
                 bloodBank.addDonor(donor);
-                if(bloodBank.frequency(name)!=1)
+                if(bloodBank.search(donor.getName())!=0)
                 {
                     cout<<"Frequent Donor"<<endl;
-                    if(bloodBank.search(name)!=-1 )
-                    {
-                        bloodBank.replace(donor,bloodBank.search(name),qty);
-                    }
+                   
+                    bloodBank.replace(donor,bloodBank.search(name),qty);
+                    break;
                 }
+                else{
                 fout.open("bloodBankDonar.txt",ios::app);
                 fout<<name << " "<<bloodType<<" "<< qty <<" "<<endl;
                 fout.close();
                 cout << "Donor added successfully." << endl;
                 break;
+            }
             }
             case 2: {
                 string bloodType;
