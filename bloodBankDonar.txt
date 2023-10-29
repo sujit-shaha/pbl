@@ -1,5 +1,7 @@
 
-
-Ashirwad B+ve 2000 
-
-OMkar O+ve 1000 
+Sujit B+ve 0.75 18 
+Sujit B+ve 0.15 18 
+Omkar O+ve 0.65 18 
+Omkar O+ve 0.25 18 
+Akshay AB+ve 0.2 20
+Akshay AB+ve 0.1 20 
