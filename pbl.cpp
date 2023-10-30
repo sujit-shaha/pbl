@@ -369,7 +369,7 @@ int main()
             if (bloodBank.search(donor.getName()) != 0)
             {
                 cout << "Frequent Donor" << endl;
-
+                bloodBank.greeting();
                 bloodBank.replace(donor, bloodBank.search(name), qty);
                 break;
             }
@@ -378,6 +378,7 @@ int main()
                 fout.open("bloodBankDonar.txt", ios::app);
                 fout << name << " " << bloodGroup << " " << qty << " " << age << endl;
                 fout.close();
+                bloodBank.greeting();
                 cout << "Donor added successfully." << endl;
                 break;
             }
