@@ -263,7 +263,7 @@ public:
                 }
             }
         }
-        cout << "Donor not found" << endl;
+        cout << "Sorry we apologize But requested blood group or blood quantity is not available " << endl;
     }
 
     
@@ -301,9 +301,7 @@ int main()
     BloodBank bloodBank;
     ifstream fin;
     ofstream fout;
-    fout.open("bloodBankDonar.txt", ios::app);
-    //    fout<<endl;
-    fout.close();
+
 
     while (true)
     {
@@ -351,12 +349,12 @@ int main()
                 goto A;
             }
         B:
-            cout << "Enter quantity of blood in litres, donor want to donate: ";
+            cout << "Enter quantity of blood in ml, donor want to donate: ";
             cin >> qty;
             try
             {
                 string s = "Thank you!!! but you can not donate more than 500 ml of blood.";
-                if (qty > 0.5)
+                if (qty > 500)
                     throw s;
             }
             catch (string s)
@@ -413,7 +411,8 @@ int main()
             break;
         }
         case 7:
-            cout << "Exiting the program. Goodbye!" << endl;
+            cout << "Working hours of Blood Camp is over !!! Closing the Blood Camp." << endl;
+            cout<< "See you tomorrow."<<endl;
             return 0;
             break;
         default:
