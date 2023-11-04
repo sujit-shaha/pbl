@@ -7,11 +7,11 @@ using namespace std;
 class Donor
 {
 public:
-    Donor(const string name, const string bloodGroup, float quantity, int age)
-        : name(name), bloodGroup(bloodGroup), quantity(quantity), age(age) {}
+    Donor(const string name, const string bloodGroup, float quantity, int age, const string mobile_no, const string city)
+        : name(name), bloodGroup(bloodGroup), quantity(quantity), age(age), mobile_no(mobile_no), city(city) {}
     virtual void display() const
     {
-        cout << "Name: " << name << " | Age: " << age << " | Blood Group: " << bloodGroup << " | Total blood denoted in lifespan: " << quantity << endl;
+        cout << "Name: " << name << " | Age: " << age << " | Blood Group: " << bloodGroup << " | Total blood denoted in lifespan: " << quantity << " | Mobile Number: " << mobile_no << " | City: " << city << endl;
     }
     const string &getbloodGroup() const
     {
@@ -29,20 +29,30 @@ public:
     {
         return age;
     }
+    const string &getMobile_no() const
+    {
+        return mobile_no;
+    }
+    const string &getCity() const
+    {
+        return city;
+    }
     float quantity;
 
 private:
     int age;
     string name;
     string bloodGroup;
+    string city;
+    string mobile_no;
 };
 class BloodBank
 {
 public:
+    map<string, int> blooodGroup;
 
-    map<string,int> blooodGroup;
-
-    inline string greeting(){
+    inline string greeting()
+    {
         string s = "Thank you for visiting ,donating your blood and saving one more life !!!";
         return s;
     }
@@ -59,7 +69,6 @@ public:
     void display()
     {
         map<string, list<string>> m;
-        
 
         ifstream fin;
         fin.open("bloodBankDonar.txt", ios::app);
@@ -73,33 +82,34 @@ public:
         fin.seekg(0, fin.beg);
         while (getline(fin, line))
         {
-            string name, blood;
+            string name, blood, city, mobile_no;
             float qty;
             int age;
-            if (fin >> name >> blood >> qty >> age)
+            if (fin >> name >> blood >> qty >> age >> mobile_no >> city)
             {
-                m[blood].push_back("name : " + name + " Quantity : " + to_string(qty) + " Age : " + to_string(age));
+                m[blood].push_back("name : " + name + " Quantity : " + to_string(qty) + " Age : " + to_string(age) + " Mobile no.: " + mobile_no + " City : " + city);
             }
         }
         map<string, list<string>>::iterator i = m.begin();
         for (i; i != m.end(); i++)
         {
-            cout << endl
-                 << i->first << " :\n";
+            cout <<endl
+                  <<i->first << " :";
             list<string>::iterator j = i->second.begin();
             while (!i->second.empty())
             {
                 auto j = i->second;
-                cout << "\t" << j.front();
+                cout << "\n" << j.front();
                 i->second.pop_front();
             }
+            cout<<endl;
         }
 
         fin.close();
     }
     float search(const string name1)
     {
-        
+
         int found = 0;
         ifstream fin;
         fin.open("bloodBankDonar.txt", ios::app);
@@ -113,9 +123,9 @@ public:
         fin.seekg(0, fin.beg);
         while (getline(fin, line))
         {
-            string name, blood;
+            string name, blood, mobile_no, city;
             float qty;
-            if (fin >> name >> blood >> qty)
+            if (fin >> name >> blood >> qty >> mobile_no >> city)
             {
                 if (name == name1)
                 {
@@ -149,13 +159,13 @@ public:
         quantity += qty;
         removeDonor(donor.getName());
         fout.open("bloodBankDonar.txt", ios::app);
-        fout << donor.getName() << " " << donor.getbloodGroup() << " " << quantity << " " << donor.getAge() << " " << endl;
+        fout << donor.getName() << " " << donor.getbloodGroup() << " " << quantity << " " << donor.getAge() << " " << donor.getMobile_no() << " " << donor.getCity() << " " << endl;
         fout.close();
         count--;
     }
     int searchDonors(const string &bloodType)
     {
-      
+
         int found = 0;
         ifstream fin;
         fin.open("bloodBankDonar.txt", ios::app);
@@ -169,23 +179,24 @@ public:
         fin.seekg(0, fin.beg);
         while (getline(fin, line))
         {
-            string name, blood;
+            string name, blood, mobile_no, city;
             float qty;
             int age;
-            if (fin >> name >> blood >> qty >> age)
+            if (fin >> name >> blood >> qty >> age >> mobile_no >> city)
             {
                 if (blood == bloodType)
                 {
-                    cout << "Name: " << name << ", Blood Group: " << blood << " Quantity : " << qty << " Age : " << age << endl;
-                   found++;
+                    cout << "Name: " << name << " Blood Group: " << blood << " Quantity : " << qty << " Age : " << age << " Mobile no.: " << mobile_no << " City: " << city << endl;
+                    found++;
                 }
             }
         }
         return found;
         fin.close();
     }
-    int donorNum(const string &bloodType){
-    	int found = 0;
+    int donorNum(const string &bloodType)
+    {
+        int found = 0;
         ifstream fin;
         fin.open("bloodBankDonar.txt", ios::app);
         if (!fin.is_open())
@@ -198,10 +209,10 @@ public:
         fin.seekg(0, fin.beg);
         while (getline(fin, line))
         {
-            string name, blood;
+            string name, blood, mobile_no, city;
             float qty;
             int age;
-            if (fin >> name >> blood >> qty >> age)
+            if (fin >> name >> blood >> qty >> age >> mobile_no >> city)
             {
                 if (blood == bloodType)
                 {
@@ -212,7 +223,6 @@ public:
         return found;
         fin.close();
     }
-	
 
     void removeDonor(string data)
     {
@@ -264,10 +274,10 @@ public:
         fin.seekg(0, fin.beg);
         while (getline(fin, line))
         {
-            string name, blood;
+            string name, blood, mobile_no, city;
             float qty;
             int age;
-            if (fin >> name >> blood >> qty >> age)
+            if (fin >> name >> blood >> qty >> age >> mobile_no >> city)
             {
                 if (blood == bloodGroup)
                 {
@@ -276,10 +286,10 @@ public:
                         if ((qty - quant) != 0)
                         {
                             fin.close();
-                            Donor donor(name, blood, (qty - quant), age);
+                            Donor donor(name, blood, (qty - quant), age, mobile_no, city);
                             replace(donor, 0, (-quant));
                             cout << "Donar found" << endl;
-                            cout << "Name: " << name << ", Blood Group: " << blood << " Quantity : " << qty << " Age : " << age << endl;
+                            cout << "Name: " << name << ", Blood Group: " << blood << " Quantity : " << qty << " Age : " << age << " Mobile no.: " << mobile_no << "City: " << city << endl;
                             return;
                         }
                         else
@@ -294,8 +304,6 @@ public:
         }
         cout << "Sorry we apologize But requested blood group or blood quantity is not available " << endl;
     }
-
-    
 
     void displayNotification()
     {
@@ -319,22 +327,22 @@ public:
         notification.push_back(requestMessage);
     }
 
-    void displayQuantity(){
-        blooodGroup.insert(pair<string,int>("O+",donorNum("O+")));
-        blooodGroup.insert(pair<string,int>("O-",donorNum("O-")));
-        blooodGroup.insert(pair<string,int>("A+",donorNum("A+")));
-        blooodGroup.insert(pair<string,int>("A-",donorNum("A-")));
-        blooodGroup.insert(pair<string,int>("B+",donorNum("B+")));
-        blooodGroup.insert(pair<string,int>("B-",donorNum("B-")));
-        blooodGroup.insert(pair<string,int>("AB+",donorNum("AB+")));
-        blooodGroup.insert(pair<string,int>("AB-",donorNum("AB-")));
+    void displayQuantity()
+    {
+        blooodGroup.insert(pair<string, int>("O+", donorNum("O+")));
+        blooodGroup.insert(pair<string, int>("O-", donorNum("O-")));
+        blooodGroup.insert(pair<string, int>("A+", donorNum("A+")));
+        blooodGroup.insert(pair<string, int>("A-", donorNum("A-")));
+        blooodGroup.insert(pair<string, int>("B+", donorNum("B+")));
+        blooodGroup.insert(pair<string, int>("B-", donorNum("B-")));
+        blooodGroup.insert(pair<string, int>("AB+", donorNum("AB+")));
+        blooodGroup.insert(pair<string, int>("AB-", donorNum("AB-")));
 
-        map<string,int>::iterator i = blooodGroup.begin();
-        for ( i ; i != blooodGroup.end(); i++)
+        map<string, int>::iterator i = blooodGroup.begin();
+        for (i; i != blooodGroup.end(); i++)
         {
-            cout<<i->first<<" : "<<i->second<<endl;
+            cout << i->first << " : " << i->second << endl;
         }
-        
     }
 
 private:
@@ -348,12 +356,14 @@ int main()
     BloodBank bloodBank;
     ifstream fin;
     ofstream fout;
+    array<string, 8> arr;
+    arr = {"A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"};
 
-	bloodBank.displayQuantity();
+    bloodBank.displayQuantity();
     while (true)
     {
     A:
-        
+
         cout << endl;
         cout << "***************************************" << endl;
         cout << "Blood Bank Management System Menu:" << endl;
@@ -372,14 +382,32 @@ int main()
         {
         case 1:
         {
-            string name, bloodGroup;
+            string name, bloodGroup, mobile_no, city;
             float qty;
-            int freq, age;
+            int freq = 0, age;
             string greeting;
             cout << "Enter donor's name: ";
             cin >> name;
+        B:
             cout << "Enter donor's blood group: ";
             cin >> bloodGroup;
+            try
+            {
+                for (int i = 0; i < arr.size(); ++i)
+                {
+                    if (bloodGroup == arr[i])
+                        freq = 1;
+                }
+                string s = "Please tell us your correct blood group.";
+                if (!freq)
+                    throw s;
+            }
+            catch (string s)
+            {
+                cout << s << endl;
+                goto B;
+            }
+
             cout << "Enter donor's age: ";
             cin >> age;
             try
@@ -396,7 +424,7 @@ int main()
                 cout << s << endl;
                 goto A;
             }
-        B:
+        C:
             cout << "Enter quantity of blood in ml, donor want to donate: ";
             cin >> qty;
             try
@@ -408,9 +436,25 @@ int main()
             catch (string s)
             {
                 cout << s << endl;
-                goto B;
+                goto C;
             }
-            Donor donor(name, bloodGroup, qty, age);
+            D:
+            cout << "Enter donor's mobile number for further emergency contacts: ";
+            cin >> mobile_no;
+            try
+            {
+                string s=" Please provide us real mobile number.";
+                if(mobile_no.length()>11 && mobile_no.length()<10)
+                throw s;
+            }
+            catch(string s)
+            {
+                cout<<s<<endl;
+                goto D;
+            }
+            cout << "Enter dono'r city for further emergency contacts: ";
+            cin >> city;
+            Donor donor(name, bloodGroup, qty, age, mobile_no, city);
             bloodBank.addDonor(donor);
             if (bloodBank.search(donor.getName()) != 0)
             {
@@ -435,11 +479,11 @@ int main()
             cout << "Enter blood type to search: ";
             cin >> bloodType;
             cout << "Donors with Blood Group " << bloodType << ":" << endl;
-            int n  = bloodBank.searchDonors(bloodType);
-            if(n==0)
+            int n = bloodBank.searchDonors(bloodType);
+            if (n == 0)
             {
-            	cout<<"Donor not found "<<endl;
-			}
+                cout << "Donor not found " << endl;
+            }
             break;
         }
         case 3:
@@ -465,7 +509,7 @@ int main()
         }
         case 7:
             cout << "Working hours of Blood Camp is over !!! Closing the Blood Camp." << endl;
-            cout<< "See you tomorrow."<<endl;
+            cout << "See you tomorrow." << endl;
             return 0;
             break;
         default:
