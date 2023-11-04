@@ -39,6 +39,9 @@ private:
 class BloodBank
 {
 public:
+
+    map<string,int> blooodGroup;
+
     inline string greeting(){
         string s = "Thank you for visiting ,donating your blood and saving one more life !!!";
         return s;
@@ -152,7 +155,7 @@ public:
     }
     int searchDonors(const string &bloodType)
     {
-        cout << "Donors with Blood Group " << bloodType << ":" << endl;
+      
         int found = 0;
         ifstream fin;
         fin.open("bloodBankDonar.txt", ios::app);
@@ -174,16 +177,42 @@ public:
                 if (blood == bloodType)
                 {
                     cout << "Name: " << name << ", Blood Group: " << blood << " Quantity : " << qty << " Age : " << age << endl;
-                    fin.close();
-                    return 1;
+                   found++;
                 }
             }
         }
-
-        cout << "Data not found";
-        return 0;
+        return found;
         fin.close();
     }
+    int donorNum(const string &bloodType){
+    	int found = 0;
+        ifstream fin;
+        fin.open("bloodBankDonar.txt", ios::app);
+        if (!fin.is_open())
+        {
+            cerr << "Error opening file!" << endl;
+            return -1;
+        }
+
+        string line;
+        fin.seekg(0, fin.beg);
+        while (getline(fin, line))
+        {
+            string name, blood;
+            float qty;
+            int age;
+            if (fin >> name >> blood >> qty >> age)
+            {
+                if (blood == bloodType)
+                {
+                    found++;
+                }
+            }
+        }
+        return found;
+        fin.close();
+    }
+	
 
     void removeDonor(string data)
     {
@@ -290,6 +319,24 @@ public:
         notification.push_back(requestMessage);
     }
 
+    void displayQuantity(){
+        blooodGroup.insert(pair<string,int>("O+",donorNum("O+")));
+        blooodGroup.insert(pair<string,int>("O-",donorNum("O-")));
+        blooodGroup.insert(pair<string,int>("A+",donorNum("A+")));
+        blooodGroup.insert(pair<string,int>("A-",donorNum("A-")));
+        blooodGroup.insert(pair<string,int>("B+",donorNum("B+")));
+        blooodGroup.insert(pair<string,int>("B-",donorNum("B-")));
+        blooodGroup.insert(pair<string,int>("AB+",donorNum("AB+")));
+        blooodGroup.insert(pair<string,int>("AB-",donorNum("AB-")));
+
+        map<string,int>::iterator i = blooodGroup.begin();
+        for ( i ; i != blooodGroup.end(); i++)
+        {
+            cout<<i->first<<" : "<<i->second<<endl;
+        }
+        
+    }
+
 private:
     vector<Donor> donors;
     vector<string> notification;
@@ -302,10 +349,11 @@ int main()
     ifstream fin;
     ofstream fout;
 
-
+	bloodBank.displayQuantity();
     while (true)
     {
     A:
+        
         cout << endl;
         cout << "***************************************" << endl;
         cout << "Blood Bank Management System Menu:" << endl;
@@ -386,7 +434,12 @@ int main()
             string bloodType;
             cout << "Enter blood type to search: ";
             cin >> bloodType;
-            bloodBank.searchDonors(bloodType);
+            cout << "Donors with Blood Group " << bloodType << ":" << endl;
+            int n  = bloodBank.searchDonors(bloodType);
+            if(n==0)
+            {
+            	cout<<"Donor not found "<<endl;
+			}
             break;
         }
         case 3:
