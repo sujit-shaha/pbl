@@ -444,7 +444,7 @@ int main()
             try
             {
                 string s=" Please provide us real mobile number.";
-                if(mobile_no.length()>11 && mobile_no.length()<10)
+                if(mobile_no.length()!=10)
                 throw s;
             }
             catch(string s)
