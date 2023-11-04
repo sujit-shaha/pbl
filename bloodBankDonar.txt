@@ -3,5 +3,7 @@
 Akshay AB+ 700 19 6895455525 Pune 
 Ashirwad B+ 660 20 6245891236 Solapur 
 Sujit B+ 850 19 7218546589 Solapur 
-Sahil A+ 450 19 8549621589 Mumbai 
+Sahil A+ 450 19 8549621589 Nashik
 Omkar B- 750 21 7219852801 Karmala 
+xyz B- 300 20 3211564987 abc
+Pranit AB+ 250 19 7896541320 Pune

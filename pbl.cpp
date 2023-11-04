@@ -452,7 +452,7 @@ int main()
                 cout<<s<<endl;
                 goto D;
             }
-            cout << "Enter dono'r city for further emergency contacts: ";
+            cout << "Enter donor city for further emergency contacts: ";
             cin >> city;
             Donor donor(name, bloodGroup, qty, age, mobile_no, city);
             bloodBank.addDonor(donor);
@@ -466,7 +466,7 @@ int main()
             else
             {
                 fout.open("bloodBankDonar.txt", ios::app);
-                fout << name << " " << bloodGroup << " " << qty << " " << age << endl;
+                fout << name << " " << bloodGroup << " " << qty << " " << age << " "<<mobile_no<<" "<<city<< endl;
                 fout.close();
                 bloodBank.greeting();
                 cout << "Donor added successfully." << endl;
